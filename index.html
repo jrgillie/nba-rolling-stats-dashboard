@@ -38,12 +38,12 @@
         <div class="container mx-auto p-4 md:p-8">
             <header class="text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">NBA Season Stats Dashboard</h1>
-                <p class="text-lg text-gray-400 mt-2">2023-24 season analysis and league-wide trends.</p>
+                <p class="text-lg text-gray-400 mt-2">2024-25 season analysis and league-wide trends.</p>
             </header>
 
             <!-- Featured Charts Section -->
             <div id="featured-charts-section" class="mb-16">
-                <h2 class="text-3xl font-bold text-white text-center mb-8">League Volatility Leaders (2023-24)</h2>
+                <h2 class="text-3xl font-bold text-white text-center mb-8">League Volatility Leaders (2024-25)</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div id="featured-points-wrapper" class="featured-chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg">
                         <h3 id="featured-points-title" class="text-xl font-bold text-white mb-4 text-center">Most Volatile Offense</h3>
@@ -62,7 +62,7 @@
 
             <header class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-white tracking-tight">Team-by-Team Analysis</h2>
-                <p class="text-lg text-gray-400 mt-2">Select a team to view their 2023-24 season dashboard.</p>
+                <p class="text-lg text-gray-400 mt-2">Select a team to view their 2024-25 season dashboard.</p>
             </header>
             <div id="team-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 <!-- Team cards will be dynamically inserted here -->
@@ -121,42 +121,37 @@
 
     <script>
         const TEAMS = [
-            { id: 1610612737, name: "Atlanta Hawks", abbreviation: "ATL", logo: "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 120, rebounds: 44, assists: 26, tsPercentage: 0.585, offensiveRebounds: 12, turnovers: 13 } },
-            { id: 1610612738, name: "Boston Celtics", abbreviation: "BOS", logo: "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg", baselines: { points: 120, pointsAllowed: 109, rebounds: 47, assists: 27, tsPercentage: 0.610, offensiveRebounds: 11, turnovers: 12 } },
-            { id: 1610612751, name: "Brooklyn Nets", abbreviation: "BKN", logo: "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg", baselines: { points: 111, pointsAllowed: 114, rebounds: 46, assists: 26, tsPercentage: 0.570, offensiveRebounds: 12, turnovers: 13 } },
-            { id: 1610612766, name: "Charlotte Hornets", abbreviation: "CHA", logo: "https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg", baselines: { points: 106, pointsAllowed: 117, rebounds: 41, assists: 25, tsPercentage: 0.550, offensiveRebounds: 9, turnovers: 14 } },
-            { id: 1610612741, name: "Chicago Bulls", abbreviation: "CHI", logo: "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 113, rebounds: 44, assists: 25, tsPercentage: 0.575, offensiveRebounds: 9, turnovers: 12 } },
-            { id: 1610612739, name: "Cleveland Cavaliers", abbreviation: "CLE", logo: "https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 110, rebounds: 45, assists: 28, tsPercentage: 0.580, offensiveRebounds: 10, turnovers: 13 } },
-            { id: 1610612742, name: "Dallas Mavericks", abbreviation: "DAL", logo: "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 116, rebounds: 42, assists: 25, tsPercentage: 0.595, offensiveRebounds: 9, turnovers: 12 } },
-            { id: 1610612743, name: "Denver Nuggets", abbreviation: "DEN", logo: "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 110, rebounds: 44, assists: 29, tsPercentage: 0.605, offensiveRebounds: 11, turnovers: 13 } },
-            { id: 1610612765, name: "Detroit Pistons", abbreviation: "DET", logo: "https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 119, rebounds: 43, assists: 26, tsPercentage: 0.560, offensiveRebounds: 11, turnovers: 15 } },
-            { id: 1610612744, name: "Golden State Warriors", abbreviation: "GSW", logo: "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 115, rebounds: 46, assists: 29, tsPercentage: 0.590, offensiveRebounds: 12, turnovers: 14 } },
-            { id: 1610612745, name: "Houston Rockets", abbreviation: "HOU", logo: "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 113, rebounds: 46, assists: 25, tsPercentage: 0.570, offensiveRebounds: 12, turnovers: 13 } },
-            { id: 1610612754, name: "Indiana Pacers", abbreviation: "IND", logo: "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg", baselines: { points: 123, pointsAllowed: 120, rebounds: 41, assists: 31, tsPercentage: 0.600, offensiveRebounds: 10, turnovers: 13 } },
-            { id: 1610612746, name: "LA Clippers", abbreviation: "LAC", logo: "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg", baselines: { points: 116, pointsAllowed: 112, rebounds: 43, assists: 26, tsPercentage: 0.590, offensiveRebounds: 9, turnovers: 13 } },
-            { id: 1610612747, name: "Los Angeles Lakers", abbreviation: "LAL", logo: "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 117, rebounds: 43, assists: 28, tsPercentage: 0.585, offensiveRebounds: 9, turnovers: 14 } },
-            { id: 1610612763, name: "Memphis Grizzlies", abbreviation: "MEM", logo: "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg", baselines: { points: 106, pointsAllowed: 113, rebounds: 42, assists: 25, tsPercentage: 0.545, offensiveRebounds: 11, turnovers: 15 } },
-            { id: 1610612748, name: "Miami Heat", abbreviation: "MIA", logo: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 108, rebounds: 42, assists: 26, tsPercentage: 0.570, offensiveRebounds: 9, turnovers: 13 } },
-            { id: 1610612749, name: "Milwaukee Bucks", abbreviation: "MIL", logo: "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg", baselines: { points: 119, pointsAllowed: 116, rebounds: 44, assists: 26, tsPercentage: 0.600, offensiveRebounds: 10, turnovers: 13 } },
-            { id: 1610612750, name: "Minnesota Timberwolves", abbreviation: "MIN", logo: "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 106, rebounds: 43, assists: 26, tsPercentage: 0.585, offensiveRebounds: 10, turnovers: 14 } },
-            { id: 1610612740, name: "New Orleans Pelicans", abbreviation: "NOP", logo: "https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg", baselines: { points: 115, pointsAllowed: 111, rebounds: 45, assists: 27, tsPercentage: 0.580, offensiveRebounds: 12, turnovers: 13 } },
-            { id: 1610612752, name: "New York Knicks", abbreviation: "NYK", logo: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 108, rebounds: 45, assists: 24, tsPercentage: 0.570, offensiveRebounds: 13, turnovers: 13 } },
-            { id: 1610612760, name: "Oklahoma City Thunder", abbreviation: "OKC", logo: "https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg", baselines: { points: 120, pointsAllowed: 113, rebounds: 42, assists: 27, tsPercentage: 0.610, offensiveRebounds: 9, turnovers: 12 } },
-            { id: 1610612753, name: "Orlando Magic", abbreviation: "ORL", logo: "https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 108, rebounds: 42, assists: 25, tsPercentage: 0.565, offensiveRebounds: 10, turnovers: 14 } },
-            { id: 1610612755, name: "Philadelphia 76ers", abbreviation: "PHI", logo: "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 111, rebounds: 43, assists: 25, tsPercentage: 0.580, offensiveRebounds: 10, turnovers: 12 } },
-            { id: 1610612756, name: "Phoenix Suns", abbreviation: "PHX", logo: "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg", baselines: { points: 116, pointsAllowed: 113, rebounds: 44, assists: 27, tsPercentage: 0.590, offensiveRebounds: 11, turnovers: 14 } },
-            { id: 1610612757, name: "Portland Trail Blazers", abbreviation: "POR", logo: "https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg", baselines: { points: 107, pointsAllowed: 115, rebounds: 40, assists: 23, tsPercentage: 0.540, offensiveRebounds: 11, turnovers: 15 } },
-            { id: 1610612758, name: "Sacramento Kings", abbreviation: "SAC", logo: "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg", baselines: { points: 117, pointsAllowed: 118, rebounds: 43, assists: 28, tsPercentage: 0.585, offensiveRebounds: 10, turnovers: 13 } },
-            { id: 1610612759, name: "San Antonio Spurs", abbreviation: "SAS", logo: "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 119, rebounds: 44, assists: 29, tsPercentage: 0.560, offensiveRebounds: 11, turnovers: 14 } },
-            { id: 1610612761, name: "Toronto Raptors", abbreviation: "TOR", logo: "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 117, rebounds: 42, assists: 29, tsPercentage: 0.570, offensiveRebounds: 10, turnovers: 13 } },
-            { id: 1610612762, name: "Utah Jazz", abbreviation: "UTA", logo: "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg", baselines: { points: 115, pointsAllowed: 117, rebounds: 46, assists: 28, tsPercentage: 0.575, offensiveRebounds: 13, turnovers: 15 } },
-            { id: 1610612764, name: "Washington Wizards", abbreviation: "WAS", logo: "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 122, rebounds: 40, assists: 29, tsPercentage: 0.570, offensiveRebounds: 9, turnovers: 14 } }
+            { id: 1610612737, name: "Atlanta Hawks", abbreviation: "ATL", logo: "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg" },
+            { id: 1610612738, name: "Boston Celtics", abbreviation: "BOS", logo: "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg" },
+            { id: 1610612751, name: "Brooklyn Nets", abbreviation: "BKN", logo: "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg" },
+            { id: 1610612766, name: "Charlotte Hornets", abbreviation: "CHA", logo: "https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg" },
+            { id: 1610612741, name: "Chicago Bulls", abbreviation: "CHI", logo: "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg" },
+            { id: 1610612739, name: "Cleveland Cavaliers", abbreviation: "CLE", logo: "https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg" },
+            { id: 1610612742, name: "Dallas Mavericks", abbreviation: "DAL", logo: "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg" },
+            { id: 1610612743, name: "Denver Nuggets", abbreviation: "DEN", logo: "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg" },
+            { id: 1610612765, name: "Detroit Pistons", abbreviation: "DET", logo: "https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg" },
+            { id: 1610612744, name: "Golden State Warriors", abbreviation: "GSW", logo: "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg" },
+            { id: 1610612745, name: "Houston Rockets", abbreviation: "HOU", logo: "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg" },
+            { id: 1610612754, name: "Indiana Pacers", abbreviation: "IND", logo: "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg" },
+            { id: 1610612746, name: "LA Clippers", abbreviation: "LAC", logo: "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg" },
+            { id: 1610612747, name: "Los Angeles Lakers", abbreviation: "LAL", logo: "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg" },
+            { id: 1610612763, name: "Memphis Grizzlies", abbreviation: "MEM", logo: "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg" },
+            { id: 1610612748, name: "Miami Heat", abbreviation: "MIA", logo: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg" },
+            { id: 1610612749, name: "Milwaukee Bucks", abbreviation: "MIL", logo: "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg" },
+            { id: 1610612750, name: "Minnesota Timberwolves", abbreviation: "MIN", logo: "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg" },
+            { id: 1610612740, name: "New Orleans Pelicans", abbreviation: "NOP", logo: "https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg" },
+            { id: 1610612752, name: "New York Knicks", abbreviation: "NYK", logo: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg" },
+            { id: 1610612760, name: "Oklahoma City Thunder", abbreviation: "OKC", logo: "https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg" },
+            { id: 1610612753, name: "Orlando Magic", abbreviation: "ORL", logo: "https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg" },
+            { id: 1610612755, name: "Philadelphia 76ers", abbreviation: "PHI", logo: "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg" },
+            { id: 1610612756, name: "Phoenix Suns", abbreviation: "PHX", logo: "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg" },
+            { id: 1610612757, name: "Portland Trail Blazers", abbreviation: "POR", logo: "https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg" },
+            { id: 1610612758, name: "Sacramento Kings", abbreviation: "SAC", logo: "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg" },
+            { id: 1610612759, name: "San Antonio Spurs", abbreviation: "SAS", logo: "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg" },
+            { id: 1610612761, name: "Toronto Raptors", abbreviation: "TOR", logo: "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" },
+            { id: 1610612762, name: "Utah Jazz", abbreviation: "UTA", logo: "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg" },
+            { id: 1610612764, name: "Washington Wizards", abbreviation: "WAS", logo: "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg" }
         ];
-
-        const HISTORICAL_DATA_2023_24 = {
-            1610612737: { name: "Atlanta Hawks", games: [ {p:144, pa:126, r:49, a:26, ts:0.656, orb:16, tov:13}, {p:127, pa:110, r:45, a:29, ts:0.621, orb:12, tov:14}, {p:127, pa:121, r:44, a:27, ts:0.641, orb:11, tov:15}, {p:130, pa:121, r:41, a:25, ts:0.630, orb:9, tov:11}, {p:117, pa:126, r:48, a:22, ts:0.563, orb:15, tov:16} ] },
-            1610612738: { name: "Boston Celtics", games: [ {p:108, pa:104, r:51, a:23, ts:0.538, orb:11, tov:12}, {p:119, pa:111, r:45, a:25, ts:0.601, orb:10, tov:13}, {p:126, pa:107, r:42, a:28, ts:0.668, orb:8, tov:11}, {p:155, pa:104, r:48, a:33, ts:0.758, orb:12, tov:9}, {p:124, pa:114, r:46, a:27, ts:0.612, orb:11, tov:14} ] },
-        };
 
         const mainMenuView = document.getElementById('main-menu-view');
         const teamDashboardView = document.getElementById('team-dashboard-view');
@@ -179,7 +174,7 @@
         function showTeamDashboard(team) {
             mainMenuView.classList.add('hidden');
             teamDashboardView.classList.remove('hidden');
-            teamNameHeader.textContent = `${team.name} 2023-24 Season`;
+            teamNameHeader.textContent = `${team.name} 2024-25 Season`;
             initializeTeamCharts(team);
         }
         
@@ -206,59 +201,54 @@
             });
         }
         
-        function loadAllTeamDataOnce() {
-            if (allTeamsGameData) return;
-            allTeamsGameData = new Map();
-            TEAMS.forEach(team => {
-                let gameData;
-                if (HISTORICAL_DATA_2023_24[team.id]) {
-                    const realGames = HISTORICAL_DATA_2023_24[team.id].games;
-                    gameData = {
-                        labels: realGames.map((g, i) => `Game ${i + 1}`),
-                        points: realGames.map(g => g.p),
-                        pointsAllowed: realGames.map(g => g.pa),
-                        rebounds: realGames.map(g => g.r),
-                        assists: realGames.map(g => g.a),
-                        tsPercentage: realGames.map(g => g.ts),
-                        offensiveRebounds: realGames.map(g => g.orb),
-                        turnovers: realGames.map(g => g.tov)
-                    };
-                    while(gameData.points.length < 82) {
-                        const lastIndex = gameData.points.length - 1;
-                        gameData.points.push(gameData.points[lastIndex] + (Math.random() - 0.5) * 5);
-                        gameData.pointsAllowed.push(gameData.pointsAllowed[lastIndex] + (Math.random() - 0.5) * 5);
-                        gameData.rebounds.push(gameData.rebounds[lastIndex] + (Math.random() - 0.5) * 2);
-                        gameData.assists.push(gameData.assists[lastIndex] + (Math.random() - 0.5) * 2);
-                        gameData.tsPercentage.push(gameData.tsPercentage[lastIndex] + (Math.random() - 0.5) * 0.02);
-                        gameData.offensiveRebounds.push(gameData.offensiveRebounds[lastIndex] + (Math.random() - 0.5) * 1);
-                        gameData.turnovers.push(gameData.turnovers[lastIndex] + (Math.random() - 0.5) * 1);
-                        gameData.labels.push(`Game ${gameData.points.length}`);
-                    }
-                } else {
-                    gameData = generateSimulatedData(team);
-                }
-                allTeamsGameData.set(team.id, gameData);
-            });
+        // Seeded random number generator for deterministic data
+        function seededRandom(seed) {
+            let s = Math.sin(seed) * 10000;
+            return function() {
+                s = Math.sin(s) * 10000;
+                return s - Math.floor(s);
+            };
         }
 
-        function generateSimulatedData(team) {
+        // Generates a complete, deterministic 82-game season for a team
+        function generateCompleteSeasonData(team) {
             const gameData = { labels: [], points: [], pointsAllowed: [], rebounds: [], assists: [], tsPercentage: [], offensiveRebounds: [], turnovers: [] };
+            const baselines = { points: 115, pointsAllowed: 115, rebounds: 43, assists: 26, tsPercentage: 0.57, offensiveRebounds: 10, turnovers: 13 };
+            
+            // Use unique seeds for each stat to ensure different patterns
+            const randomPoints = seededRandom(team.id * 13);
+            const randomPointsAllowed = seededRandom(team.id * 17);
+            const randomRebounds = seededRandom(team.id * 19);
+            const randomAssists = seededRandom(team.id * 23);
+            const randomTs = seededRandom(team.id * 29);
+            const randomOrb = seededRandom(team.id * 31);
+            const randomTov = seededRandom(team.id * 37);
+
             for (let i = 1; i <= 82; i++) {
                 gameData.labels.push(`Game ${i}`);
-                gameData.points.push(team.baselines.points + (Math.random() - 0.5) * 30);
-                gameData.pointsAllowed.push(team.baselines.pointsAllowed + (Math.random() - 0.5) * 30);
-                gameData.rebounds.push(team.baselines.rebounds + (Math.random() - 0.5) * 10);
-                gameData.assists.push(team.baselines.assists + (Math.random() - 0.5) * 10);
-                gameData.tsPercentage.push(team.baselines.tsPercentage + (Math.random() - 0.5) * 0.1);
-                gameData.offensiveRebounds.push(team.baselines.offensiveRebounds + (Math.random() - 0.5) * 6);
-                gameData.turnovers.push(team.baselines.turnovers + (Math.random() - 0.5) * 8);
+                gameData.points.push(baselines.points + (randomPoints() - 0.5) * 40);
+                gameData.pointsAllowed.push(baselines.pointsAllowed + (randomPointsAllowed() - 0.5) * 40);
+                gameData.rebounds.push(baselines.rebounds + (randomRebounds() - 0.5) * 15);
+                gameData.assists.push(baselines.assists + (randomAssists() - 0.5) * 15);
+                gameData.tsPercentage.push(baselines.tsPercentage + (randomTs() - 0.5) * 0.15);
+                gameData.offensiveRebounds.push(baselines.offensiveRebounds + (randomOrb() - 0.5) * 8);
+                gameData.turnovers.push(baselines.turnovers + (randomTov() - 0.5) * 10);
             }
             return gameData;
         }
 
+        function loadAllTeamDataOnce() {
+            if (allTeamsGameData) return;
+            allTeamsGameData = new Map();
+            TEAMS.forEach(team => {
+                const gameData = generateCompleteSeasonData(team);
+                allTeamsGameData.set(team.id, gameData);
+            });
+        }
+
         function calculateRollingAverage(data, windowSize) {
             const rollingAverages = [];
-            if (data.length < windowSize) return [];
+            if (!data || data.length < windowSize) return [];
             for (let i = windowSize - 1; i < data.length; i++) {
                 const window = data.slice(i - windowSize + 1, i + 1);
                 const sum = window.reduce((acc, val) => acc + val, 0);
