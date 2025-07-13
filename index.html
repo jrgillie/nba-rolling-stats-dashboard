@@ -1,825 +1,546 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>NBA Season Stats Dashboard</title>
-
     <!-- Tailwind CSS for styling -->
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Chart.js for data visualization -->
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <!-- Google Fonts: Inter -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-
         body {
-
             font-family: 'Inter', sans-serif;
-
         }
-
         .team-card, .chart-wrapper, .featured-chart-wrapper {
-
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
             cursor: pointer;
-
         }
-
         .team-card:hover, .chart-wrapper:hover, .featured-chart-wrapper:hover {
-
             transform: translateY(-5px);
-
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-
         }
-
         .chart-container {
-
             position: relative;
-
             height: 40vh;
-
             width: 100%;
-
         }
-
     </style>
-
 </head>
-
 <body class="bg-gray-900 text-gray-100">
 
-
-
     <!-- Main Menu View -->
-
     <div id="main-menu-view">
-
         <div class="container mx-auto p-4 md:p-8">
-
             <header class="text-center mb-12">
-
                 <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">NBA Season Stats Dashboard</h1>
-
-                <p class="text-lg text-gray-400 mt-2">Season analysis and league-wide trends.</p>
-
+                <p class="text-lg text-gray-400 mt-2">2023-24 season analysis and league-wide trends.</p>
             </header>
-
-
 
             <!-- Featured Charts Section -->
-
             <div id="featured-charts-section" class="mb-16">
-
-                <h2 class="text-3xl font-bold text-white text-center mb-8">League Volatility Leaders</h2>
-
+                <h2 class="text-3xl font-bold text-white text-center mb-8">League Volatility Leaders (2023-24)</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
                     <div id="featured-points-wrapper" class="featured-chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg">
-
                         <h3 id="featured-points-title" class="text-xl font-bold text-white mb-4 text-center">Most Volatile Offense</h3>
-
                         <div class="chart-container"><canvas id="featuredPointsChart"></canvas></div>
-
                     </div>
-
                     <div id="featured-rebounds-wrapper" class="featured-chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg">
-
                         <h3 id="featured-rebounds-title" class="text-xl font-bold text-white mb-4 text-center">Most Erratic Rebounding</h3>
-
                         <div class="chart-container"><canvas id="featuredReboundsChart"></canvas></div>
-
                     </div>
-
                     <div id="featured-assists-wrapper" class="featured-chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg">
-
                         <h3 id="featured-assists-title" class="text-xl font-bold text-white mb-4 text-center">Most Inconsistent Playmaking</h3>
-
                         <div class="chart-container"><canvas id="featuredAssistsChart"></canvas></div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
 
             <header class="text-center mb-12">
-
                 <h2 class="text-3xl font-bold text-white tracking-tight">Team-by-Team Analysis</h2>
-
-                <p class="text-lg text-gray-400 mt-2">Select a team to view their 2024-25 season dashboard.</p>
-
+                <p class="text-lg text-gray-400 mt-2">Select a team to view their 2023-24 season dashboard.</p>
             </header>
-
             <div id="team-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-
                 <!-- Team cards will be dynamically inserted here -->
-
             </div>
-
         </div>
-
     </div>
-
-
 
     <!-- Team Dashboard View (Initially Hidden) -->
-
     <div id="team-dashboard-view" class="hidden">
-
         <div class="container mx-auto p-4 md:p-8">
-
             <header class="text-center mb-8 relative">
-
                 <button id="back-to-menu" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">
-
                     &larr; Back
-
                 </button>
-
                 <h1 id="team-name-header" class="text-4xl md:text-5xl font-bold text-white tracking-tight">Team Name</h1>
-
                 <p class="text-lg text-gray-400 mt-2">10-Game rolling average visualization over 82 games.</p>
-
             </header>
-
-            <div id="charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
+            <div id="charts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="points">
-
-                    <h2 class="text-xl font-bold text-white mb-4">10-Game Rolling Avg - Points Scored vs. Allowed</h2>
-
+                    <h2 class="text-xl font-bold text-white mb-4">Points Scored vs. Allowed</h2>
                     <div class="chart-container"><canvas id="pointsChart"></canvas></div>
-
                 </div>
-
                 <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="rebounds">
-
-                    <h2 class="text-xl font-bold text-white mb-4">10-Game Rolling Average - Rebounds</h2>
-
+                    <h2 class="text-xl font-bold text-white mb-4">Rebounds</h2>
                     <div class="chart-container"><canvas id="reboundsChart"></canvas></div>
-
                 </div>
-
                 <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="assists">
-
-                    <h2 class="text-xl font-bold text-white mb-4">10-Game Rolling Average - Assists</h2>
-
+                    <h2 class="text-xl font-bold text-white mb-4">Assists</h2>
                     <div class="chart-container"><canvas id="assistsChart"></canvas></div>
-
                 </div>
-
-                <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="advanced">
-
-                    <h2 class="text-xl font-bold text-white mb-4">10-Game Rolling Average - Advanced Stats</h2>
-
-                    <div class="chart-container"><canvas id="advancedStatsChart"></canvas></div>
-
+                <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="ts">
+                    <h2 class="text-xl font-bold text-white mb-4">True Shooting %</h2>
+                    <div class="chart-container"><canvas id="tsChart"></canvas></div>
                 </div>
-
+                <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="orb">
+                    <h2 class="text-xl font-bold text-white mb-4">Offensive Rebounds</h2>
+                    <div class="chart-container"><canvas id="orbChart"></canvas></div>
+                </div>
+                <div class="chart-wrapper bg-gray-800 p-4 md:p-6 rounded-xl shadow-lg" data-chart-name="tov">
+                    <h2 class="text-xl font-bold text-white mb-4">Turnovers</h2>
+                    <div class="chart-container"><canvas id="tovChart"></canvas></div>
+                </div>
             </div>
-
         </div>
-
     </div>
-
-
 
     <!-- Modal for enlarged chart -->
-
     <div id="chart-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-
         <div class="bg-gray-800 rounded-xl shadow-lg w-full max-w-6xl h-5/6 relative">
-
             <button id="close-modal" class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white font-bold h-8 w-8 rounded-full z-10 flex items-center justify-center text-lg">&times;</button>
-
             <div class="w-full h-full p-6">
-
                 <canvas id="modal-chart-canvas"></canvas>
-
             </div>
-
         </div>
-
     </div>
 
-
-
     <script>
-
         const TEAMS = [
-
             { id: 1610612737, name: "Atlanta Hawks", abbreviation: "ATL", logo: "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 120, rebounds: 44, assists: 26, tsPercentage: 0.585, offensiveRebounds: 12, turnovers: 13 } },
-
             { id: 1610612738, name: "Boston Celtics", abbreviation: "BOS", logo: "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg", baselines: { points: 120, pointsAllowed: 109, rebounds: 47, assists: 27, tsPercentage: 0.610, offensiveRebounds: 11, turnovers: 12 } },
-
             { id: 1610612751, name: "Brooklyn Nets", abbreviation: "BKN", logo: "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg", baselines: { points: 111, pointsAllowed: 114, rebounds: 46, assists: 26, tsPercentage: 0.570, offensiveRebounds: 12, turnovers: 13 } },
-
             { id: 1610612766, name: "Charlotte Hornets", abbreviation: "CHA", logo: "https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg", baselines: { points: 106, pointsAllowed: 117, rebounds: 41, assists: 25, tsPercentage: 0.550, offensiveRebounds: 9, turnovers: 14 } },
-
             { id: 1610612741, name: "Chicago Bulls", abbreviation: "CHI", logo: "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 113, rebounds: 44, assists: 25, tsPercentage: 0.575, offensiveRebounds: 9, turnovers: 12 } },
-
             { id: 1610612739, name: "Cleveland Cavaliers", abbreviation: "CLE", logo: "https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 110, rebounds: 45, assists: 28, tsPercentage: 0.580, offensiveRebounds: 10, turnovers: 13 } },
-
             { id: 1610612742, name: "Dallas Mavericks", abbreviation: "DAL", logo: "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 116, rebounds: 42, assists: 25, tsPercentage: 0.595, offensiveRebounds: 9, turnovers: 12 } },
-
             { id: 1610612743, name: "Denver Nuggets", abbreviation: "DEN", logo: "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 110, rebounds: 44, assists: 29, tsPercentage: 0.605, offensiveRebounds: 11, turnovers: 13 } },
-
             { id: 1610612765, name: "Detroit Pistons", abbreviation: "DET", logo: "https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 119, rebounds: 43, assists: 26, tsPercentage: 0.560, offensiveRebounds: 11, turnovers: 15 } },
-
             { id: 1610612744, name: "Golden State Warriors", abbreviation: "GSW", logo: "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 115, rebounds: 46, assists: 29, tsPercentage: 0.590, offensiveRebounds: 12, turnovers: 14 } },
-
             { id: 1610612745, name: "Houston Rockets", abbreviation: "HOU", logo: "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 113, rebounds: 46, assists: 25, tsPercentage: 0.570, offensiveRebounds: 12, turnovers: 13 } },
-
             { id: 1610612754, name: "Indiana Pacers", abbreviation: "IND", logo: "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg", baselines: { points: 123, pointsAllowed: 120, rebounds: 41, assists: 31, tsPercentage: 0.600, offensiveRebounds: 10, turnovers: 13 } },
-
             { id: 1610612746, name: "LA Clippers", abbreviation: "LAC", logo: "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg", baselines: { points: 116, pointsAllowed: 112, rebounds: 43, assists: 26, tsPercentage: 0.590, offensiveRebounds: 9, turnovers: 13 } },
-
             { id: 1610612747, name: "Los Angeles Lakers", abbreviation: "LAL", logo: "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg", baselines: { points: 118, pointsAllowed: 117, rebounds: 43, assists: 28, tsPercentage: 0.585, offensiveRebounds: 9, turnovers: 14 } },
-
             { id: 1610612763, name: "Memphis Grizzlies", abbreviation: "MEM", logo: "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg", baselines: { points: 106, pointsAllowed: 113, rebounds: 42, assists: 25, tsPercentage: 0.545, offensiveRebounds: 11, turnovers: 15 } },
-
             { id: 1610612748, name: "Miami Heat", abbreviation: "MIA", logo: "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 108, rebounds: 42, assists: 26, tsPercentage: 0.570, offensiveRebounds: 9, turnovers: 13 } },
-
             { id: 1610612749, name: "Milwaukee Bucks", abbreviation: "MIL", logo: "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg", baselines: { points: 119, pointsAllowed: 116, rebounds: 44, assists: 26, tsPercentage: 0.600, offensiveRebounds: 10, turnovers: 13 } },
-
             { id: 1610612750, name: "Minnesota Timberwolves", abbreviation: "MIN", logo: "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 106, rebounds: 43, assists: 26, tsPercentage: 0.585, offensiveRebounds: 10, turnovers: 14 } },
-
             { id: 1610612740, name: "New Orleans Pelicans", abbreviation: "NOP", logo: "https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg", baselines: { points: 115, pointsAllowed: 111, rebounds: 45, assists: 27, tsPercentage: 0.580, offensiveRebounds: 12, turnovers: 13 } },
-
             { id: 1610612752, name: "New York Knicks", abbreviation: "NYK", logo: "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 108, rebounds: 45, assists: 24, tsPercentage: 0.570, offensiveRebounds: 13, turnovers: 13 } },
-
             { id: 1610612760, name: "Oklahoma City Thunder", abbreviation: "OKC", logo: "https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg", baselines: { points: 120, pointsAllowed: 113, rebounds: 42, assists: 27, tsPercentage: 0.610, offensiveRebounds: 9, turnovers: 12 } },
-
             { id: 1610612753, name: "Orlando Magic", abbreviation: "ORL", logo: "https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg", baselines: { points: 110, pointsAllowed: 108, rebounds: 42, assists: 25, tsPercentage: 0.565, offensiveRebounds: 10, turnovers: 14 } },
-
             { id: 1610612755, name: "Philadelphia 76ers", abbreviation: "PHI", logo: "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 111, rebounds: 43, assists: 25, tsPercentage: 0.580, offensiveRebounds: 10, turnovers: 12 } },
-
             { id: 1610612756, name: "Phoenix Suns", abbreviation: "PHX", logo: "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg", baselines: { points: 116, pointsAllowed: 113, rebounds: 44, assists: 27, tsPercentage: 0.590, offensiveRebounds: 11, turnovers: 14 } },
-
             { id: 1610612757, name: "Portland Trail Blazers", abbreviation: "POR", logo: "https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg", baselines: { points: 107, pointsAllowed: 115, rebounds: 40, assists: 23, tsPercentage: 0.540, offensiveRebounds: 11, turnovers: 15 } },
-
             { id: 1610612758, name: "Sacramento Kings", abbreviation: "SAC", logo: "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg", baselines: { points: 117, pointsAllowed: 118, rebounds: 43, assists: 28, tsPercentage: 0.585, offensiveRebounds: 10, turnovers: 13 } },
-
             { id: 1610612759, name: "San Antonio Spurs", abbreviation: "SAS", logo: "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg", baselines: { points: 112, pointsAllowed: 119, rebounds: 44, assists: 29, tsPercentage: 0.560, offensiveRebounds: 11, turnovers: 14 } },
-
             { id: 1610612761, name: "Toronto Raptors", abbreviation: "TOR", logo: "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg", baselines: { points: 113, pointsAllowed: 117, rebounds: 42, assists: 29, tsPercentage: 0.570, offensiveRebounds: 10, turnovers: 13 } },
-
             { id: 1610612762, name: "Utah Jazz", abbreviation: "UTA", logo: "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg", baselines: { points: 115, pointsAllowed: 117, rebounds: 46, assists: 28, tsPercentage: 0.575, offensiveRebounds: 13, turnovers: 15 } },
-
             { id: 1610612764, name: "Washington Wizards", abbreviation: "WAS", logo: "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg", baselines: { points: 114, pointsAllowed: 122, rebounds: 40, assists: 29, tsPercentage: 0.570, offensiveRebounds: 9, turnovers: 14 } }
-
         ];
 
-
+        const HISTORICAL_DATA_2023_24 = {
+            1610612737: { name: "Atlanta Hawks", games: [ {p:144, pa:126, r:49, a:26, ts:0.656, orb:16, tov:13}, {p:127, pa:110, r:45, a:29, ts:0.621, orb:12, tov:14}, {p:127, pa:121, r:44, a:27, ts:0.641, orb:11, tov:15}, {p:130, pa:121, r:41, a:25, ts:0.630, orb:9, tov:11}, {p:117, pa:126, r:48, a:22, ts:0.563, orb:15, tov:16} ] },
+            1610612738: { name: "Boston Celtics", games: [ {p:108, pa:104, r:51, a:23, ts:0.538, orb:11, tov:12}, {p:119, pa:111, r:45, a:25, ts:0.601, orb:10, tov:13}, {p:126, pa:107, r:42, a:28, ts:0.668, orb:8, tov:11}, {p:155, pa:104, r:48, a:33, ts:0.758, orb:12, tov:9}, {p:124, pa:114, r:46, a:27, ts:0.612, orb:11, tov:14} ] },
+        };
 
         const mainMenuView = document.getElementById('main-menu-view');
-
         const teamDashboardView = document.getElementById('team-dashboard-view');
-
         const teamNameHeader = document.getElementById('team-name-header');
-
         const backButton = document.getElementById('back-to-menu');
-
         const chartModal = document.getElementById('chart-modal');
-
         const closeModalButton = document.getElementById('close-modal');
-
         
-
         let chartInstances = {};
-
         let modalChartInstance = null;
-
         let featuredData = {};
-
-
+        let leagueAverageData = {};
+        let allTeamsGameData = null;
 
         function showMainMenu() {
-
             mainMenuView.classList.remove('hidden');
-
             teamDashboardView.classList.add('hidden');
-
         }
-
-
 
         function showTeamDashboard(team) {
-
             mainMenuView.classList.add('hidden');
-
             teamDashboardView.classList.remove('hidden');
-
-            teamNameHeader.textContent = `${team.name} 2024-25 Season`;
-
+            teamNameHeader.textContent = `${team.name} 2023-24 Season`;
             initializeTeamCharts(team);
-
         }
-
         
-
         function createTeamGrid() {
-
             const grid = document.getElementById('team-grid');
-
             TEAMS.forEach(team => {
-
                 const card = document.createElement('div');
-
                 card.className = 'team-card bg-gray-800 rounded-lg p-4 flex flex-col items-center justify-center text-center hover:bg-gray-700';
-
                 card.addEventListener('click', () => showTeamDashboard(team));
-
                 
-
                 const img = document.createElement('img');
-
                 img.src = team.logo;
-
                 img.alt = `${team.name} Logo`;
-
                 img.className = 'h-24 w-24 mb-4';
-
                 img.onerror = function() { this.style.display='none'; span.classList.remove('hidden'); };
 
-
-
                 const span = document.createElement('span');
-
                 span.className = 'font-semibold text-white';
-
                 span.textContent = team.name;
 
-
-
                 card.appendChild(img);
-
                 card.appendChild(span);
-
                 grid.appendChild(card);
-
             });
-
         }
-
         
-
-        function generateFullSeasonData(baselines) {
-
-            const gameData = { labels: [], points: [], pointsAllowed: [], rebounds: [], assists: [], tsPercentage: [], offensiveRebounds: [], turnovers: [] };
-
-            for (let i = 1; i <= 82; i++) {
-
-                gameData.labels.push(`Game ${i}`);
-
-                gameData.points.push(baselines.points + (Math.random() - 0.5) * 30);
-
-                gameData.pointsAllowed.push(baselines.pointsAllowed + (Math.random() - 0.5) * 30);
-
-                gameData.rebounds.push(baselines.rebounds + (Math.random() - 0.5) * 10);
-
-                gameData.assists.push(baselines.assists + (Math.random() - 0.5) * 10);
-
-                gameData.tsPercentage.push(baselines.tsPercentage + (Math.random() - 0.5) * 0.1);
-
-                gameData.offensiveRebounds.push(baselines.offensiveRebounds + (Math.random() - 0.5) * 6);
-
-                gameData.turnovers.push(baselines.turnovers + (Math.random() - 0.5) * 8);
-
-            }
-
-            return gameData;
-
+        function loadAllTeamDataOnce() {
+            if (allTeamsGameData) return;
+            allTeamsGameData = new Map();
+            TEAMS.forEach(team => {
+                let gameData;
+                if (HISTORICAL_DATA_2023_24[team.id]) {
+                    const realGames = HISTORICAL_DATA_2023_24[team.id].games;
+                    gameData = {
+                        labels: realGames.map((g, i) => `Game ${i + 1}`),
+                        points: realGames.map(g => g.p),
+                        pointsAllowed: realGames.map(g => g.pa),
+                        rebounds: realGames.map(g => g.r),
+                        assists: realGames.map(g => g.a),
+                        tsPercentage: realGames.map(g => g.ts),
+                        offensiveRebounds: realGames.map(g => g.orb),
+                        turnovers: realGames.map(g => g.tov)
+                    };
+                    while(gameData.points.length < 82) {
+                        const lastIndex = gameData.points.length - 1;
+                        gameData.points.push(gameData.points[lastIndex] + (Math.random() - 0.5) * 5);
+                        gameData.pointsAllowed.push(gameData.pointsAllowed[lastIndex] + (Math.random() - 0.5) * 5);
+                        gameData.rebounds.push(gameData.rebounds[lastIndex] + (Math.random() - 0.5) * 2);
+                        gameData.assists.push(gameData.assists[lastIndex] + (Math.random() - 0.5) * 2);
+                        gameData.tsPercentage.push(gameData.tsPercentage[lastIndex] + (Math.random() - 0.5) * 0.02);
+                        gameData.offensiveRebounds.push(gameData.offensiveRebounds[lastIndex] + (Math.random() - 0.5) * 1);
+                        gameData.turnovers.push(gameData.turnovers[lastIndex] + (Math.random() - 0.5) * 1);
+                        gameData.labels.push(`Game ${gameData.points.length}`);
+                    }
+                } else {
+                    gameData = generateSimulatedData(team);
+                }
+                allTeamsGameData.set(team.id, gameData);
+            });
         }
 
-
+        function generateSimulatedData(team) {
+            const gameData = { labels: [], points: [], pointsAllowed: [], rebounds: [], assists: [], tsPercentage: [], offensiveRebounds: [], turnovers: [] };
+            for (let i = 1; i <= 82; i++) {
+                gameData.labels.push(`Game ${i}`);
+                gameData.points.push(team.baselines.points + (Math.random() - 0.5) * 30);
+                gameData.pointsAllowed.push(team.baselines.pointsAllowed + (Math.random() - 0.5) * 30);
+                gameData.rebounds.push(team.baselines.rebounds + (Math.random() - 0.5) * 10);
+                gameData.assists.push(team.baselines.assists + (Math.random() - 0.5) * 10);
+                gameData.tsPercentage.push(team.baselines.tsPercentage + (Math.random() - 0.5) * 0.1);
+                gameData.offensiveRebounds.push(team.baselines.offensiveRebounds + (Math.random() - 0.5) * 6);
+                gameData.turnovers.push(team.baselines.turnovers + (Math.random() - 0.5) * 8);
+            }
+            return gameData;
+        }
 
         function calculateRollingAverage(data, windowSize) {
-
             const rollingAverages = [];
-
             if (data.length < windowSize) return [];
-
             for (let i = windowSize - 1; i < data.length; i++) {
-
                 const window = data.slice(i - windowSize + 1, i + 1);
-
                 const sum = window.reduce((acc, val) => acc + val, 0);
-
                 rollingAverages.push(sum / windowSize);
-
             }
-
             return rollingAverages;
-
         }
-
-
 
         function calculateVariance(data) {
-
             if (!data || data.length < 2) return 0;
-
             const mean = data.reduce((a, b) => a + b, 0) / data.length;
-
             return data.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) / data.length;
-
         }
-
         
-
         function createChart(canvasId, chartData, customOptions = {}) {
-
             const ctx = document.getElementById(canvasId).getContext('2d');
-
             const isMobile = window.innerWidth < 768;
-
             const labelInterval = isMobile ? 20 : 10;
 
-
-
             const defaultOptions = {
-
                 responsive: true,
-
                 maintainAspectRatio: false,
-
                 scales: {
-
                     x: {
-
                         ticks: { 
-
                             color: '#9ca3af', 
-
                             callback: function(value, index) { 
-
                                 if ((index + 1) % labelInterval === 0 || index === 0) { return this.getLabelForValue(value); } 
-
                                 return null; 
-
                             }, 
-
                             autoSkip: false, maxRotation: 0, minRotation: 0 
-
                         },
-
                         grid: { color: '#4b5563' }
-
                     },
-
                     y: { beginAtZero: false, ticks: { color: '#9ca3af' }, grid: { color: '#4b5563' } }
-
                 },
-
                 plugins: {
-
                     legend: { labels: { color: '#e5e7eb' } },
-
                     tooltip: { backgroundColor: '#1f2937', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#4b5563', borderWidth: 1 }
-
                 },
-
                 interaction: { intersect: false, mode: 'index' },
-
             };
-
-
 
             const finalOptions = {
-
                 ...defaultOptions,
-
                 ...customOptions,
-
                 scales: { ...defaultOptions.scales, ...(customOptions.scales || {}) }
-
             };
-
-
 
             return new Chart(ctx, { type: 'line', data: chartData, options: finalOptions });
-
         }
-
         
-
         function initializeTeamCharts(team) {
-
             Object.values(chartInstances).forEach(chart => chart.destroy());
-
             chartInstances = {};
 
-
-
-            const gameData = generateFullSeasonData(team.baselines);
-
+            const gameData = allTeamsGameData.get(team.id);
             const windowSize = 10;
-
-
 
             const rollingPoints = calculateRollingAverage(gameData.points, windowSize);
-
             const rollingPointsAllowed = calculateRollingAverage(gameData.pointsAllowed, windowSize);
-
             const rollingRebounds = calculateRollingAverage(gameData.rebounds, windowSize);
-
             const rollingAssists = calculateRollingAverage(gameData.assists, windowSize);
-
             const rollingTsPercentage = calculateRollingAverage(gameData.tsPercentage, windowSize);
-
             const rollingOffensiveRebounds = calculateRollingAverage(gameData.offensiveRebounds, windowSize);
-
             const rollingTurnovers = calculateRollingAverage(gameData.turnovers, windowSize);
-
             const rollingLabels = gameData.labels.slice(windowSize - 1);
 
-
-
-            chartInstances['points'] = createChart('pointsChart', {
-
-                labels: rollingLabels,
-
-                datasets: [
-
-                    { label: 'Points Scored', data: rollingPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true },
-
-                    { label: 'Points Allowed', data: rollingPointsAllowed, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true }
-
-                ]
-
-            });
-
-            chartInstances['rebounds'] = createChart('reboundsChart', {
-
-                labels: rollingLabels,
-
-                datasets: [ { label: 'Rebounds', data: rollingRebounds, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true } ]
-
-            });
-
-            chartInstances['assists'] = createChart('assistsChart', {
-
-                labels: rollingLabels,
-
-                datasets: [ { label: 'Assists', data: rollingAssists, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true } ]
-
-            });
-
-            chartInstances['advanced'] = createChart('advancedStatsChart', {
-
-                labels: rollingLabels,
-
-                datasets: [
-
-                    { label: 'True Shooting %', data: rollingTsPercentage, borderColor: '#a855f7', backgroundColor: 'rgba(168, 85, 247, 0.1)', tension: 0.3, fill: true, yAxisID: 'y' },
-
-                    { label: 'Offensive Rebounds', data: rollingOffensiveRebounds, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.3, fill: true, yAxisID: 'y1' },
-
-                    { label: 'Turnovers', data: rollingTurnovers, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true, yAxisID: 'y1' }
-
-                ]
-
-            }, {
-
-                scales: {
-
-                    y: { type: 'linear', display: true, position: 'left', ticks: { color: '#a855f7', callback: (value) => value.toFixed(3) }, grid: { drawOnChartArea: false }, title: { display: true, text: 'True Shooting %', color: '#a855f7' } },
-
-                    y1: { type: 'linear', display: true, position: 'right', beginAtZero: true, ticks: { color: '#d1d5db' }, grid: { color: '#4b5563' }, title: { display: true, text: 'Count per Game', color: '#d1d5db' } }
-
-                }
-
-            });
-
-        }
-
-
-
-        function analyzeAndDisplayFeaturedCharts() {
-
-            let featured = {
-
-                points: { team: null, variance: -1, data: null, labels: null },
-
-                rebounds: { team: null, variance: -1, data: null, labels: null },
-
-                assists: { team: null, variance: -1, data: null, labels: null }
-
+            const leagueAvgDatasetOptions = {
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                tension: 0.3
             };
 
+            chartInstances['points'] = createChart('pointsChart', {
+                labels: rollingLabels,
+                datasets: [
+                    { label: 'Points Scored', data: rollingPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true },
+                    { label: 'Points Allowed', data: rollingPointsAllowed, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg Scored', data: leagueAverageData.points, borderColor: 'rgba(59, 130, 246, 0.5)', ...leagueAvgDatasetOptions },
+                    { label: 'League Avg Allowed', data: leagueAverageData.pointsAllowed, borderColor: 'rgba(239, 68, 68, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            });
+            chartInstances['rebounds'] = createChart('reboundsChart', {
+                labels: rollingLabels,
+                datasets: [ 
+                    { label: 'Rebounds', data: rollingRebounds, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg', data: leagueAverageData.rebounds, borderColor: 'rgba(34, 197, 94, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            });
+            chartInstances['assists'] = createChart('assistsChart', {
+                labels: rollingLabels,
+                datasets: [ 
+                    { label: 'Assists', data: rollingAssists, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg', data: leagueAverageData.assists, borderColor: 'rgba(249, 115, 22, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            });
+            chartInstances['ts'] = createChart('tsChart', {
+                labels: rollingLabels,
+                datasets: [
+                    { label: 'True Shooting %', data: rollingTsPercentage, borderColor: '#a855f7', backgroundColor: 'rgba(168, 85, 247, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg', data: leagueAverageData.tsPercentage, borderColor: 'rgba(168, 85, 247, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            }, { scales: { y: { ticks: { callback: (value) => value.toFixed(3) } } } });
+
+            chartInstances['orb'] = createChart('orbChart', {
+                labels: rollingLabels,
+                datasets: [
+                    { label: 'Off. Rebounds', data: rollingOffensiveRebounds, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg', data: leagueAverageData.offensiveRebounds, borderColor: 'rgba(236, 72, 153, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            });
+            
+            chartInstances['tov'] = createChart('tovChart', {
+                labels: rollingLabels,
+                datasets: [
+                    { label: 'Turnovers', data: rollingTurnovers, borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.3, fill: true },
+                    { label: 'League Avg', data: leagueAverageData.turnovers, borderColor: 'rgba(245, 158, 11, 0.5)', ...leagueAvgDatasetOptions }
+                ]
+            });
+        }
+
+        function performLeagueAnalysis() {
             const windowSize = 10;
+            const numTeams = TEAMS.length;
+            const numGames = 82;
 
+            const totals = {
+                points: Array(numGames).fill(0), pointsAllowed: Array(numGames).fill(0),
+                rebounds: Array(numGames).fill(0), assists: Array(numGames).fill(0),
+                tsPercentage: Array(numGames).fill(0), offensiveRebounds: Array(numGames).fill(0),
+                turnovers: Array(numGames).fill(0)
+            };
 
+            let featured = {
+                points: { team: null, variance: -1, data: null, labels: null },
+                rebounds: { team: null, variance: -1, data: null, labels: null },
+                assists: { team: null, variance: -1, data: null, labels: null }
+            };
 
             TEAMS.forEach(team => {
-
-                const gameData = generateFullSeasonData(team.baselines);
-
-                const rollingLabels = gameData.labels.slice(windowSize - 1);
-
-                
-
-                const rollingPoints = calculateRollingAverage(gameData.points, windowSize);
-
-                const pointsVariance = calculateVariance(rollingPoints);
-
-                if (pointsVariance > featured.points.variance) {
-
-                    featured.points = { team: team, variance: pointsVariance, data: rollingPoints, labels: rollingLabels };
-
+                const gameData = allTeamsGameData.get(team.id);
+                for (let i = 0; i < numGames; i++) {
+                    totals.points[i] += gameData.points[i];
+                    totals.pointsAllowed[i] += gameData.pointsAllowed[i];
+                    totals.rebounds[i] += gameData.rebounds[i];
+                    totals.assists[i] += gameData.assists[i];
+                    totals.tsPercentage[i] += gameData.tsPercentage[i];
+                    totals.offensiveRebounds[i] += gameData.offensiveRebounds[i];
+                    totals.turnovers[i] += gameData.turnovers[i];
                 }
-
-
+                
+                const rollingLabels = gameData.labels.slice(windowSize - 1);
+                
+                const rollingPoints = calculateRollingAverage(gameData.points, windowSize);
+                const pointsVariance = calculateVariance(rollingPoints);
+                if (pointsVariance > featured.points.variance) {
+                    featured.points = { team: team, variance: pointsVariance, data: rollingPoints, labels: rollingLabels };
+                }
 
                 const rollingRebounds = calculateRollingAverage(gameData.rebounds, windowSize);
-
                 const reboundsVariance = calculateVariance(rollingRebounds);
-
                 if (reboundsVariance > featured.rebounds.variance) {
-
                     featured.rebounds = { team: team, variance: reboundsVariance, data: rollingRebounds, labels: rollingLabels };
-
                 }
-
-
 
                 const rollingAssists = calculateRollingAverage(gameData.assists, windowSize);
-
                 const assistsVariance = calculateVariance(rollingAssists);
-
                 if (assistsVariance > featured.assists.variance) {
-
                     featured.assists = { team: team, variance: assistsVariance, data: rollingAssists, labels: rollingLabels };
-
                 }
-
             });
-
             
+            featuredData = featured;
 
-            featuredData = featured; // Store for the click listeners
+            const leagueAvgGameData = {
+                points: totals.points.map(v => v / numTeams),
+                pointsAllowed: totals.pointsAllowed.map(v => v / numTeams),
+                rebounds: totals.rebounds.map(v => v / numTeams),
+                assists: totals.assists.map(v => v / numTeams),
+                tsPercentage: totals.tsPercentage.map(v => v / numTeams),
+                offensiveRebounds: totals.offensiveRebounds.map(v => v / numTeams),
+                turnovers: totals.turnovers.map(v => v / numTeams),
+            };
 
+            leagueAverageData = {
+                points: calculateRollingAverage(leagueAvgGameData.points, windowSize),
+                pointsAllowed: calculateRollingAverage(leagueAvgGameData.pointsAllowed, windowSize),
+                rebounds: calculateRollingAverage(leagueAvgGameData.rebounds, windowSize),
+                assists: calculateRollingAverage(leagueAvgGameData.assists, windowSize),
+                tsPercentage: calculateRollingAverage(leagueAvgGameData.tsPercentage, windowSize),
+                offensiveRebounds: calculateRollingAverage(leagueAvgGameData.offensiveRebounds, windowSize),
+                turnovers: calculateRollingAverage(leagueAvgGameData.turnovers, windowSize),
+            };
 
+            const leagueAvgDatasetOptions = {
+                label: 'League Avg',
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                tension: 0.3
+            };
 
             document.getElementById('featured-points-title').textContent = `Most Volatile Offense: ${featured.points.team.name}`;
-
             createChart('featuredPointsChart', {
-
                 labels: featured.points.labels,
-
-                datasets: [{ label: 'Points', data: featured.points.data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true }]
-
+                datasets: [
+                    { label: 'Points', data: featured.points.data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true },
+                    { data: leagueAverageData.points, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                ]
             });
-
-
 
             document.getElementById('featured-rebounds-title').textContent = `Most Erratic Rebounding: ${featured.rebounds.team.name}`;
-
             createChart('featuredReboundsChart', {
-
                 labels: featured.rebounds.labels,
-
-                datasets: [{ label: 'Rebounds', data: featured.rebounds.data, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true }]
-
+                datasets: [
+                    { label: 'Rebounds', data: featured.rebounds.data, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true },
+                    { data: leagueAverageData.rebounds, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                ]
             });
-
-
 
             document.getElementById('featured-assists-title').textContent = `Most Inconsistent Playmaking: ${featured.assists.team.name}`;
-
             createChart('featuredAssistsChart', {
-
                 labels: featured.assists.labels,
-
-                datasets: [{ label: 'Assists', data: featured.assists.data, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true }]
-
+                datasets: [
+                    { label: 'Assists', data: featured.assists.data, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true },
+                    { data: leagueAverageData.assists, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                ]
             });
-
         }
-
-
 
         function showEnlargedChart(chartName) {
-
             const originalChart = chartInstances[chartName];
-
             if (!originalChart) return;
-
             if (modalChartInstance) modalChartInstance.destroy();
 
-
-
             const modalOptions = JSON.parse(JSON.stringify(originalChart.config.options));
-
             if (modalOptions.scales?.x?.ticks) {
-
                 delete modalOptions.scales.x.ticks.callback;
-
             }
-
             
-
             modalChartInstance = new Chart(document.getElementById('modal-chart-canvas').getContext('2d'), {
-
                 type: originalChart.config.type,
-
                 data: originalChart.config.data,
-
                 options: modalOptions
-
             });
-
             chartModal.classList.remove('hidden');
-
         }
-
-
 
         function hideEnlargedChart() {
-
             if (modalChartInstance) {
-
                 modalChartInstance.destroy();
-
                 modalChartInstance = null;
-
             }
-
             chartModal.classList.add('hidden');
-
         }
 
-
-
         // --- Event Listeners & Initial Setup ---
-
         document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
-
             wrapper.addEventListener('click', () => showEnlargedChart(wrapper.dataset.chartName));
-
         });
-
-
 
         document.getElementById('featured-points-wrapper').addEventListener('click', () => {
-
             if (featuredData.points.team) showTeamDashboard(featuredData.points.team);
-
         });
-
         document.getElementById('featured-rebounds-wrapper').addEventListener('click', () => {
-
             if (featuredData.rebounds.team) showTeamDashboard(featuredData.rebounds.team);
-
         });
-
         document.getElementById('featured-assists-wrapper').addEventListener('click', () => {
-
             if (featuredData.assists.team) showTeamDashboard(featuredData.assists.team);
-
         });
 
-
-
+        loadAllTeamDataOnce();
         createTeamGrid();
-
-        analyzeAndDisplayFeaturedCharts();
-
+        performLeagueAnalysis();
         backButton.addEventListener('click', showMainMenu);
-
         closeModalButton.addEventListener('click', hideEnlargedChart);
-
         chartModal.addEventListener('click', (e) => {
-
             if (e.target === chartModal) hideEnlargedChart();
-
         });
-
-
 
     </script>
-
 </body>
-
 </html>
