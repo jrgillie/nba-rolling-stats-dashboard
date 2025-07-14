@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Annotation Plugin for vertical lines -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,6 +155,9 @@
             { id: 1610612764, name: "Washington Wizards", abbreviation: "WAS", logo: "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg" }
         ];
 
+        // Register the annotation plugin with Chart.js
+        Chart.register(window['chartjs-plugin-annotation']);
+
         const mainMenuView = document.getElementById('main-menu-view');
         const teamDashboardView = document.getElementById('team-dashboard-view');
         const teamNameHeader = document.getElementById('team-name-header');
@@ -167,11 +172,13 @@
         let allTeamsGameData = null;
 
         function showMainMenu() {
+            window.scrollTo(0, 0);
             mainMenuView.classList.remove('hidden');
             teamDashboardView.classList.add('hidden');
         }
 
         function showTeamDashboard(team) {
+            window.scrollTo(0, 0);
             mainMenuView.classList.add('hidden');
             teamDashboardView.classList.remove('hidden');
             teamNameHeader.textContent = `${team.name} 2024-25 Season`;
@@ -201,7 +208,6 @@
             });
         }
         
-        // Seeded random number generator for deterministic data
         function seededRandom(seed) {
             let s = Math.sin(seed) * 10000;
             return function() {
@@ -210,12 +216,10 @@
             };
         }
 
-        // Generates a complete, deterministic 82-game season for a team
         function generateCompleteSeasonData(team) {
             const gameData = { labels: [], points: [], pointsAllowed: [], rebounds: [], assists: [], tsPercentage: [], offensiveRebounds: [], turnovers: [] };
             const baselines = { points: 115, pointsAllowed: 115, rebounds: 43, assists: 26, tsPercentage: 0.57, offensiveRebounds: 10, turnovers: 13 };
             
-            // Use unique seeds for each stat to ensure different patterns
             const randomPoints = seededRandom(team.id * 13);
             const randomPointsAllowed = seededRandom(team.id * 17);
             const randomRebounds = seededRandom(team.id * 19);
@@ -265,9 +269,7 @@
         
         function createChart(canvasId, chartData, customOptions = {}) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            const isMobile = window.innerWidth < 768;
-            const labelInterval = isMobile ? 20 : 10;
-
+            
             const defaultOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -275,19 +277,36 @@
                     x: {
                         ticks: { 
                             color: '#9ca3af', 
-                            callback: function(value, index) { 
-                                if ((index + 1) % labelInterval === 0 || index === 0) { return this.getLabelForValue(value); } 
-                                return null; 
-                            }, 
-                            autoSkip: false, maxRotation: 0, minRotation: 0 
+                            maxTicksLimit: 8,
+                            maxRotation: 0, 
+                            minRotation: 0 
                         },
                         grid: { color: '#4b5563' }
                     },
                     y: { beginAtZero: false, ticks: { color: '#9ca3af' }, grid: { color: '#4b5563' } }
                 },
                 plugins: {
-                    legend: { labels: { color: '#e5e7eb' } },
-                    tooltip: { backgroundColor: '#1f2937', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#4b5563', borderWidth: 1 }
+                    legend: { 
+                        position: 'bottom',
+                        labels: { 
+                            color: '#e5e7eb',
+                            usePointStyle: true,
+                            filter: item => item.text
+                        } 
+                    },
+                    tooltip: { backgroundColor: '#1f2937', titleColor: '#f9fafb', bodyColor: '#d1d5db', borderColor: '#4b5563', borderWidth: 1 },
+                    annotation: {
+                        annotations: {
+                            tradeDeadline: {
+                                type: 'line',
+                                scaleID: 'x',
+                                value: 'Game 55',
+                                borderColor: 'rgba(255, 165, 0, 0.7)',
+                                borderWidth: 2,
+                                borderDash: [6, 6],
+                            }
+                        }
+                    }
                 },
                 interaction: { intersect: false, mode: 'index' },
             };
@@ -295,7 +314,8 @@
             const finalOptions = {
                 ...defaultOptions,
                 ...customOptions,
-                scales: { ...defaultOptions.scales, ...(customOptions.scales || {}) }
+                scales: { ...defaultOptions.scales, ...(customOptions.scales || {}) },
+                plugins: { ...defaultOptions.plugins, ...(customOptions.plugins || {}) }
             };
 
             return new Chart(ctx, { type: 'line', data: chartData, options: finalOptions });
@@ -318,56 +338,75 @@
             const rollingLabels = gameData.labels.slice(windowSize - 1);
 
             const leagueAvgDatasetOptions = {
+                label: 'League Avg',
                 borderDash: [5, 5],
                 pointRadius: 0,
                 fill: false,
-                tension: 0.3
+                tension: 0.3,
+                borderColor: 'rgba(156, 163, 175, 0.7)',
+                pointStyle: 'line'
+            };
+            
+            const tradeDeadlineDataset = {
+                label: 'Trade Deadline',
+                data: [],
+                borderColor: 'rgba(255, 165, 0, 0)', // Invisible in chart body
+                pointStyle: 'line',
+                borderDash: [6, 6],
+                borderWidth: 2,
+                // Custom property to pass the real color to the legend
+                customLegendColor: 'rgba(255, 165, 0, 0.7)'
             };
 
             chartInstances['points'] = createChart('pointsChart', {
                 labels: rollingLabels,
                 datasets: [
-                    { label: 'Points Scored', data: rollingPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true },
-                    { label: 'Points Allowed', data: rollingPointsAllowed, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg Scored', data: leagueAverageData.points, borderColor: 'rgba(59, 130, 246, 0.5)', ...leagueAvgDatasetOptions },
-                    { label: 'League Avg Allowed', data: leagueAverageData.pointsAllowed, borderColor: 'rgba(239, 68, 68, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: 'Scored', data: rollingPoints, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { label: 'Allowed', data: rollingPointsAllowed, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.points },
+                    tradeDeadlineDataset
                 ]
             });
             chartInstances['rebounds'] = createChart('reboundsChart', {
                 labels: rollingLabels,
                 datasets: [ 
-                    { label: 'Rebounds', data: rollingRebounds, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg', data: leagueAverageData.rebounds, borderColor: 'rgba(34, 197, 94, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: '', data: rollingRebounds, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.rebounds },
+                    tradeDeadlineDataset
                 ]
             });
             chartInstances['assists'] = createChart('assistsChart', {
                 labels: rollingLabels,
                 datasets: [ 
-                    { label: 'Assists', data: rollingAssists, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg', data: leagueAverageData.assists, borderColor: 'rgba(249, 115, 22, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: '', data: rollingAssists, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.assists },
+                    tradeDeadlineDataset
                 ]
             });
             chartInstances['ts'] = createChart('tsChart', {
                 labels: rollingLabels,
                 datasets: [
-                    { label: 'True Shooting %', data: rollingTsPercentage, borderColor: '#a855f7', backgroundColor: 'rgba(168, 85, 247, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg', data: leagueAverageData.tsPercentage, borderColor: 'rgba(168, 85, 247, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: '', data: rollingTsPercentage, borderColor: '#a855f7', backgroundColor: 'rgba(168, 85, 247, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.tsPercentage },
+                    tradeDeadlineDataset
                 ]
             }, { scales: { y: { ticks: { callback: (value) => value.toFixed(3) } } } });
 
             chartInstances['orb'] = createChart('orbChart', {
                 labels: rollingLabels,
                 datasets: [
-                    { label: 'Off. Rebounds', data: rollingOffensiveRebounds, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg', data: leagueAverageData.offensiveRebounds, borderColor: 'rgba(236, 72, 153, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: '', data: rollingOffensiveRebounds, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.offensiveRebounds },
+                    tradeDeadlineDataset
                 ]
             });
             
             chartInstances['tov'] = createChart('tovChart', {
                 labels: rollingLabels,
                 datasets: [
-                    { label: 'Turnovers', data: rollingTurnovers, borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.3, fill: true },
-                    { label: 'League Avg', data: leagueAverageData.turnovers, borderColor: 'rgba(245, 158, 11, 0.5)', ...leagueAvgDatasetOptions }
+                    { label: '', data: rollingTurnovers, borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.turnovers },
+                    tradeDeadlineDataset
                 ]
             });
         }
@@ -450,15 +489,29 @@
                 borderDash: [5, 5],
                 pointRadius: 0,
                 fill: false,
-                tension: 0.3
+                tension: 0.3,
+                borderColor: 'rgba(156, 163, 175, 0.7)',
+                pointStyle: 'line'
+            };
+            
+            const tradeDeadlineDataset = {
+                label: 'Trade Deadline',
+                data: [],
+                borderColor: 'rgba(255, 165, 0, 0.7)',
+                borderDash: [6, 6],
+                borderWidth: 2,
+                pointRadius: 0,
+                fill: false,
+                pointStyle: 'line'
             };
 
             document.getElementById('featured-points-title').textContent = `Most Volatile Offense: ${featured.points.team.name}`;
             createChart('featuredPointsChart', {
                 labels: featured.points.labels,
                 datasets: [
-                    { label: 'Points', data: featured.points.data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true },
-                    { data: leagueAverageData.points, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                    { label: '', data: featured.points.data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.points },
+                    tradeDeadlineDataset
                 ]
             });
 
@@ -466,8 +519,9 @@
             createChart('featuredReboundsChart', {
                 labels: featured.rebounds.labels,
                 datasets: [
-                    { label: 'Rebounds', data: featured.rebounds.data, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true },
-                    { data: leagueAverageData.rebounds, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                    { label: '', data: featured.rebounds.data, borderColor: '#22c55e', backgroundColor: 'rgba(34, 197, 94, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.rebounds },
+                    tradeDeadlineDataset
                 ]
             });
 
@@ -475,8 +529,9 @@
             createChart('featuredAssistsChart', {
                 labels: featured.assists.labels,
                 datasets: [
-                    { label: 'Assists', data: featured.assists.data, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true },
-                    { data: leagueAverageData.assists, borderColor: 'rgba(156, 163, 175, 0.7)', ...leagueAvgDatasetOptions }
+                    { label: '', data: featured.assists.data, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)', tension: 0.3, fill: true, pointStyle: 'line' },
+                    { ...leagueAvgDatasetOptions, data: leagueAverageData.assists },
+                    tradeDeadlineDataset
                 ]
             });
         }
@@ -489,12 +544,13 @@
             const modalOptions = JSON.parse(JSON.stringify(originalChart.config.options));
             if (modalOptions.scales?.x?.ticks) {
                 delete modalOptions.scales.x.ticks.callback;
+                modalOptions.scales.x.ticks.maxTicksLimit = 15; // Show more ticks in modal
             }
             
             modalChartInstance = new Chart(document.getElementById('modal-chart-canvas').getContext('2d'), {
                 type: originalChart.config.type,
                 data: originalChart.config.data,
-                options: modalOptions
+                options: modalOptions,
             });
             chartModal.classList.remove('hidden');
         }
